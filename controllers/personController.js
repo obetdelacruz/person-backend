@@ -21,27 +21,23 @@ async function getPerson(req, res, next) {
   }
 }
 
-async function createPerson(req, res, next) {
-  try {
-    const { name, number, userId } = req.body;
+async function createPerson(req, res) {
+  const { name, number, userId } = req.body;
 
-    const user = await User.findById(userId);
+  const user = await User.findById(userId);
 
-    const person = new Person({
-      name,
-      number,
-      user: user.id,
-    });
+  const person = new Person({
+    name,
+    number,
+    user: user.id,
+  });
 
-    const savedPerson = await person.save();
+  const savedPerson = await person.save();
 
-    user.persons = user.persons.concat(savedPerson._id);
-    await user.save();
+  user.persons = user.persons.concat(savedPerson._id);
+  await user.save();
 
-    return res.status(201).json(savedPerson);
-  } catch (error) {
-    next(error);
-  }
+  return res.status(201).json(savedPerson);
 }
 
 async function updatePerson(req, res, next) {
